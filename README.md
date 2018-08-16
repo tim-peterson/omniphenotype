@@ -13,4 +13,4 @@ Code for to generate data for each figure written in PHP or MySQL. The underlyin
 
 ### Figure 3
 
-- Guzzle, which is a PHP library to make HTTP requests, is required to run Figure 3 code. 
+- [Guzzle](http://docs.guzzlephp.org/en/stable/), which is a PHP library to make HTTP requests, is required to run Figure 3 code. 
