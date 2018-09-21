@@ -1,11 +1,11 @@
 # omniphenotype
-For the `Cell growth is an omniphenotype` paper.
+Code for the `Cell growth is an omniphenotype` paper.
 
-Code for to generate data for each figure written in PHP or MySQL. The underlying data can be accessed as described in the methods.
+Code to generate data for each figure was written in PHP or MySQL. The underlying data can be accessed as described in the methods.
 
 ### Figure 2
 
-- figure1.sql has multiple MySQL commands that are needed to generate the data shown in Figure 2.
+- figure2.sql has multiple MySQL commands that are needed to generate the data shown in Figure 2.
 
 ### Figure 3
 
