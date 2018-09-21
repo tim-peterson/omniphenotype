@@ -1,4 +1,4 @@
-# Figure 1
+# Figure 2 queries
 
 	select count(distinct(`GO term accession`)) from (select `Gene stable ID` from (select * from wang_essential_genes m
 	join aliases_ensembl e

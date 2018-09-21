@@ -1,7 +1,7 @@
 
 
 
-# graphing data found in Table 1
+# graphing data found in Figure 3
 
 p2 <- ggplot(cancer_vs_other, aes(x = `cancer`, y = `other`)) + geom_point(color = "#153049", size=4) + ylim(0,40000) + xlim(0,40000) + scale_x_continuous(trans='log10') + scale_y_continuous(trans='log10') 
 
