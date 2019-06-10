@@ -1,11 +1,13 @@
 # omniphenotype
-Code for the `Cell growth is an omniphenotype` paper.
+Code for the `Cell fitness is an omniphenotype` paper.
 
 Code to generate data for each figure was written in PHP or MySQL. The underlying data can be accessed as described in the methods.
 
 ### Figure 2
 
-- figure2.sql has multiple MySQL commands that are needed to generate the data shown in Figure 2.
+- figure2A.sql has multiple MySQL commands that are needed to generate the data shown in Figure 2A.
+
+- Any gene cluster can be input into the figure2B.py script to yield the data that can be converted into the volcano plot as shown in Figure 2B.
 
 ### Figure 3
 
