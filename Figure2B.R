@@ -1,0 +1,11 @@
+library(ggplot2)
+library("scales")
+reverselog_trans <- function(base = exp(1)) {
+  trans <- function(x) -log(x, base)
+  inv <- function(x) base^(-x)
+  trans_new(paste0("reverselog-", format(base)), trans, inv, 
+            log_breaks(base = base), 
+            domain = c(1e-100, Inf))
+}
+
+ggplot(MTOR_RPTOR2, aes(x=X2, y=X3, colour = "#153049")) + scale_colour_manual(values = c("#153049")) + geom_point(size=2) + theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), panel.background = element_rect(fill = '#e6e7e8', colour = '#a7a9ac', size=1)) + scale_y_continuous(trans=reverselog_trans(10)) 

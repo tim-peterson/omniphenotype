@@ -10,7 +10,7 @@ from rpy2.robjects.vectors import FloatVector
 
 stats = importr('stats')
 
-path = "/Users/timrpeterson/OneDrive - Washington University in St. Louis/Data/MORPHEOME/"
+path = "/Users/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
 
 input_genes = ["TGFBR2", "TGFBR1", "SMAD3", "FBN1"]
 input_genes = ["MTOR", "RPTOR"]
@@ -18,14 +18,15 @@ input_genes = ["MTOR", "RPTOR"]
 dataset_type = sys.argv[1]
 input_genes = sys.argv[2:]
 
+
 input_genes_str = '_'.join(input_genes)
 
-
 if "depmap_broad_sanger" in dataset_type:
-	datasets = [path + 'DepMap/gene_effect_corrected_output.csv', path + 'Hart-Moffat/qbf_Avanadata_2018.csv', path + 'DepMap/02a_BayesianFactors.csv']
-
+	datasets = [path + 'DepMap/gene_effect_corrected_t_clean_gene_name.csv', path + 'DepMap/qbf_Avanadata_2018.csv', path + 'DepMap/02a_BayesianFactors.csv']
+elif "2019q2" in dataset_type:
+	datasets = [path + 'DepMap/broad_2019q2_t.csv']
 else:
-	datasets = [path + 'DepMap/gene_effect_corrected_output.csv', path + 'Hart-Moffat/qbf_Avanadata_2018.csv']
+	datasets = [path + 'DepMap/qbf_Avanadata_2018.csv', path + 'DepMap/gene_effect_corrected_output.csv'] # path + 'DepMap/gene_effect_corrected_output.csv', 
 
 output = {}
 for x in input_genes:
@@ -34,14 +35,14 @@ for x in input_genes:
 
 		delimiter = ','
 
-		if "gene_effect" not in y:
+		if "2019q2" in y:
 			#age = '2018q4'
 			#delimiter = '\t'
-			remove_gene_id = False 
+			remove_gene_id = True 
 		else:
 			#age = '2019q1'
 			#delimiter = ','
-			remove_gene_id = True 
+			remove_gene_id = False 
 
 		with open(y) as csv_file:
 			csv_reader = csv.reader(csv_file, delimiter=delimiter)
