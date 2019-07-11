@@ -116,15 +116,16 @@ with open("/Users/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.cs
 
 temp = {}
 for row in output2:
-	temp[row[0]] = row[1]
+	temp[row[0]] = [row[1], row[2]]
 
 output2_plus_citation_counts = []
 
-for key, value in citation_counts.items():
-	if key in temp:
-		output2_plus_citation_counts.append(list((key,) + (temp[key],value))) 
+for key, value in temp.items():
+
+	if key in citation_counts:
+		output2_plus_citation_counts.append(list((key,) + (value[0], value[1], citation_counts[key]))) 
 	else:
-		output2_plus_citation_counts.append(list((key,) + (temp[key],0))) 
+		output2_plus_citation_counts.append(list((key,) + (value[0], value[1], 0))) 
 #sort the output desc
 
 output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
