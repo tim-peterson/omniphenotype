@@ -123,13 +123,12 @@ output2_plus_citation_counts = []
 for key, value in citation_counts.items():
 	if key in temp:
 		output2_plus_citation_counts.append(list((key,) + (temp[key],value))) 
-
+	else:
+		output2_plus_citation_counts.append(list((key,) + (temp[key],0))) 
 #sort the output desc
 
 output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
-output3 = sorted(output2, key=lambda x: x[1], reverse=True)
-
-
+#output3 = sorted(output2, key=lambda x: x[1], reverse=True)
 
 
 with open(path + 'interaction_correlations_basal/' + input_genes_str + '-' + dataset_type + '-pearsons-python.csv', 'w') as csvfile:
