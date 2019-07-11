@@ -1,5 +1,7 @@
 library(ggplot2)
 library("scales")
+
+# needed to invert y-axis while making it log scale
 reverselog_trans <- function(base = exp(1)) {
   trans <- function(x) -log(x, base)
   inv <- function(x) base^(-x)

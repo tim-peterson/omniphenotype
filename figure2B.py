@@ -12,8 +12,8 @@ stats = importr('stats')
 
 path = "/Users/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
 
-input_genes = ["TGFBR2", "TGFBR1", "SMAD3", "FBN1"]
-input_genes = ["MTOR", "RPTOR"]
+#input_genes = ["TGFBR2", "TGFBR1", "SMAD3", "FBN1"]
+#input_genes = ["MTOR", "RPTOR"]
 
 dataset_type = sys.argv[1]
 input_genes = sys.argv[2:]
@@ -55,7 +55,7 @@ for x in input_genes:
 
 				if remove_gene_id is True:
 					arr = gene.split()
-				#row_temp.pop(0)
+
 					genes[arr[0]] = row
 				else:
 					genes[gene] = row
@@ -77,31 +77,59 @@ for x in input_genes:
 						output[key]["pval"].append(result[1])
 
 					elif "pval" not in output[key] and result[1]!=0: 
-
 						output[key]["pval"] = [result[1]]
+
 				else:
-
 					if result[1]!=0: 
-
 						output[key] = {"pearsons" : [result[0]], "pval" : [result[1]]}
 					else:
 						output[key] = {"pearsons" : [result[0]]}
-				#output.append(list((key,) + result)) 
-
-				#sort the output desc
-			#output2 = sorted(output, key=lambda x: x[1], reverse=True)
 
 output2 = []
 for key, value in output.items():
-	p_adjust = stats.p_adjust(FloatVector(value["pval"]), method = 'BH')
-	pval = scipy.stats.stats.combine_pvalues(p_adjust)
-	#pval = np.prod(value["pval"])/len(value["pval"])
-	result = (sum(value["pearsons"])/len(value["pearsons"]), pval[1])
 
-	output2.append(list((key,) + result)) 
+	if "pval" in value:
+
+		if len(value["pval"]) > 1:
+			p_adjust = stats.p_adjust(FloatVector(value["pval"]), method = 'BH')
+			pval = scipy.stats.stats.combine_pvalues(p_adjust)
+		else:
+			pval = [0, value["pval"][0]]
+
+		result = (sum(value["pearsons"])/len(value["pearsons"]), pval[1])
+
+		output2.append(list((key,) + result)) 
+	else:
+		output2.append(list((key,) + (1,0))) 
+
+# adding citation counts to a volcano plot
+citation_counts = {}
+with open("/Users/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
+	csv_reader = csv.reader(csv_file, delimiter=",")
+
+	for row in csv_reader:
+		for x in input_genes:
+			if row[0] in x:
+				citation_counts[row[1]] = row[2]
+			elif row[1] in x:
+				citation_counts[row[0]] = row[2]
+
+temp = {}
+for row in output2:
+	temp[row[0]] = row[1]
+
+output2_plus_citation_counts = []
+
+for key, value in citation_counts.items():
+	if key in temp:
+		output2_plus_citation_counts.append(list((key,) + (temp[key],value))) 
 
 #sort the output desc
+
+output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
 output3 = sorted(output2, key=lambda x: x[1], reverse=True)
+
+
 
 
 with open(path + 'interaction_correlations_basal/' + input_genes_str + '-' + dataset_type + '-pearsons-python.csv', 'w') as csvfile:
