@@ -25,6 +25,8 @@ if "depmap_broad_sanger" in dataset_type:
 	datasets = [path + 'DepMap/gene_effect_corrected_t_clean_gene_name.csv', path + 'DepMap/qbf_Avanadata_2018.csv', path + 'DepMap/02a_BayesianFactors.csv']
 elif "2019q2" in dataset_type:
 	datasets = [path + 'DepMap/broad_2019q2_t.csv']
+elif "2018" in dataset_type:
+	datasets = [path + 'DepMap/qbf_Avanadata_2018.csv'] # path + 'DepMap/gene_effect_corrected_output.csv', 
 else:
 	datasets = [path + 'DepMap/qbf_Avanadata_2018.csv', path + 'DepMap/gene_effect_corrected_output.csv'] # path + 'DepMap/gene_effect_corrected_output.csv', 
 
@@ -123,7 +125,7 @@ output2_plus_citation_counts = []
 for key, value in temp.items():
 
 	if key in citation_counts:
-		output2_plus_citation_counts.append(list((key,) + (value[0], value[1], citation_counts[key]))) 
+		output2_plus_citation_counts.append(list((key,) + (value[0], value[1], int(citation_counts[key])))) 
 	else:
 		output2_plus_citation_counts.append(list((key,) + (value[0], value[1], 0))) 
 #sort the output desc
@@ -136,6 +138,7 @@ with open(path + 'interaction_correlations_basal/' + input_genes_str + '-' + dat
 	spamwriter = csv.writer(csvfile, delimiter=',')
 
 	for row in output3:
+		#if row[2] < .00000001:
 		#if any(field.strip() for field in row):
 		spamwriter.writerow(row)
 
