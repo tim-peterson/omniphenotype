@@ -10,7 +10,7 @@ from rpy2.robjects.vectors import FloatVector
 
 stats = importr('stats')
 
-path = "/home/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
+path = "/scratch/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
 
 #input_genes = ["TGFBR2", "TGFBR1", "SMAD3", "FBN1"]
 input_genes = ["MTOR", "RPTOR"]
@@ -106,7 +106,7 @@ for key, value in output.items():
 
 # adding citation counts to a volcano plot
 citation_counts = {}
-with open("/home/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
+with open("/scratch/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=",")
 
 	for row in csv_reader:
@@ -133,6 +133,7 @@ for key, value in temp.items():
 output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
 #output3 = sorted(output2, key=lambda x: x[1], reverse=True)
 
+path = "/scratch/timrpeterson/MORPHEOME/"
 
 with open(path + 'interaction_correlations_basal/' + input_genes_str + '-' + dataset_type + '-pearsons-python.csv', 'w') as csvfile:
 	spamwriter = csv.writer(csvfile, delimiter=',')
