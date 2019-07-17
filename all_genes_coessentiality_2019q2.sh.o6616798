@@ -1,0 +1,19 @@
+--------------------------------------------------------------
+Begin PBS Prologue Wed Jul 17 16:10:52 CDT 2019 1563397852
+Job ID:			6616798.mgt2.cluster
+Username:		timrpeterson
+Group:			tpeterson
+Nodes:			node14
+End PBS Prologue Wed Jul 17 16:10:52 CDT 2019 1563397852
+--------------------------------------------------------------
+--------------------------------------------------------------
+Begin PBS Epilogue Wed Jul 17 16:16:46 CDT 2019 1563398206
+Job ID:			6616798.mgt2.cluster
+Username:		timrpeterson
+Group:			tpeterson
+Job Name:		all_genes_coessentiality_2019q2.sh
+Limits:           	walltime=00:05:00,mem=4gb,neednodes=compute
+Resources:		cput=00:05:09,vmem=2342720kb,walltime=00:05:53,mem=1435328kb,energy_used=0
+Nodes:	        	node14
+End PBS Epilogue Wed Jul 17 16:16:46 CDT 2019 1563398206
+--------------------------------------------------------------
