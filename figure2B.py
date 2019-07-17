@@ -10,14 +10,14 @@ from rpy2.robjects.vectors import FloatVector
 
 stats = importr('stats')
 
-path = "/Users/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
+path = "/home/timrpeterson/OneDrive-v2/Data/MORPHEOME/" #  - Washington University in St. Louis
 
 #input_genes = ["TGFBR2", "TGFBR1", "SMAD3", "FBN1"]
-#input_genes = ["MTOR", "RPTOR"]
+input_genes = ["MTOR", "RPTOR"]
 
 dataset_type = sys.argv[1]
-input_genes = sys.argv[2:]
-
+#input_genes = sys.argv[2:]
+#dataset_type = "2019q2"
 
 input_genes_str = '_'.join(input_genes)
 
@@ -106,7 +106,7 @@ for key, value in output.items():
 
 # adding citation counts to a volcano plot
 citation_counts = {}
-with open("/Users/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
+with open("/home/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=",")
 
 	for row in csv_reader:

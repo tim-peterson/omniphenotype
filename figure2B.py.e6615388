@@ -1,0 +1,9 @@
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 2: import: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 3: import: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 4: import: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 5: import: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 6: from: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 8: from: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 9: from: command not found
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 11: syntax error near unexpected token `('
+/var/spool/torque/mom_priv/jobs/6615388.mgt2.cluster.SC: line 11: `stats = importr('stats')'

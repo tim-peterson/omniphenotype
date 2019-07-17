@@ -1,0 +1,19 @@
+--------------------------------------------------------------
+Begin PBS Prologue Wed Jul 17 09:49:25 CDT 2019 1563374965
+Job ID:			6615388.mgt2.cluster
+Username:		timrpeterson
+Group:			tpeterson
+Nodes:			node11
+End PBS Prologue Wed Jul 17 09:49:25 CDT 2019 1563374965
+--------------------------------------------------------------
+--------------------------------------------------------------
+Begin PBS Epilogue Wed Jul 17 09:49:31 CDT 2019 1563374971
+Job ID:			6615388.mgt2.cluster
+Username:		timrpeterson
+Group:			tpeterson
+Job Name:		figure2B.py
+Limits:           	walltime=00:05:00,mem=4gb,neednodes=compute
+Resources:		cput=00:00:00,vmem=0kb,walltime=00:00:01,mem=0kb,energy_used=0
+Nodes:	        	node11
+End PBS Epilogue Wed Jul 17 09:49:31 CDT 2019 1563374971
+--------------------------------------------------------------
