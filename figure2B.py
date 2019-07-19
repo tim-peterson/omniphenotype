@@ -30,129 +30,130 @@ elif "2018" in dataset_type:
 	datasets = [path + 'DepMap/qbf_Avanadata_2018.csv'] # path + 'DepMap/gene_effect_corrected_output.csv', 
 else:
 	datasets = [path + 'DepMap/qbf_Avanadata_2018.csv', path + 'DepMap/gene_effect_corrected_output.csv'] # path + 'DepMap/gene_effect_corrected_output.csv', 
-output = {}
 
+genes = {}
+for y in datasets:
+
+	delimiter = ','
+
+	if "2019q2" in y:
+		#age = '2018q4'
+		#delimiter = '\t'
+		remove_gene_id = True 
+	else:
+		#age = '2019q1'
+		#delimiter = ','
+		remove_gene_id = False 
+
+	with open(y) as csv_file:
+		csv_reader = csv.reader(csv_file, delimiter=delimiter)
+		next(csv_reader)
+
+		for row in csv_reader:
+			gene = row[0]
+			row.pop(0)
+
+			if remove_gene_id is True:
+				arr = gene.split()
+
+				genes[arr[0]] = row
+			else:
+				genes[gene] = row
+
+input_genes = []
 with open('/scratch/timrpeterson/OneDrive-v2/Data/MORPHEOME/interaction_correlations_basal/MTOR_RPTOR-2019q2-pearsons-python.csv') as csv_file:
 	csv_reader = csv.reader(csv_file, delimiter=',')
 	line_count = 0
 	for row in csv_reader:
 		#if line_count == 0:
-		input_genes = [row[0]]
-		input_genes_str = '_'.join(input_genes)
+		input_genes = input_genes.append(row[0])
+		#input_genes_str = '_'.join(input_genes)
 
-		time.sleep(1) 
 
-		for x in input_genes:
+# adding citation counts to a volcano plot
+citation_counts = {}
+with open("/scratch/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
+	csv_reader = csv.reader(csv_file, delimiter=",")
 
-			for y in datasets:
+	for row in csv_reader:
 
-				delimiter = ','
+		citation_counts[row[0] + "__" + row[1]] = row[2]
 
-				if "2019q2" in y:
-					#age = '2018q4'
-					#delimiter = '\t'
-					remove_gene_id = True 
-				else:
-					#age = '2019q1'
-					#delimiter = ','
-					remove_gene_id = False 
+output = {}
+for x in input_genes:
 
-				with open(y) as csv_file:
-					csv_reader = csv.reader(csv_file, delimiter=delimiter)
-					next(csv_reader)
+	time.sleep(1) 	
 
-					genes = {}
-					for row in csv_reader:
-						gene = row[0]
-						row.pop(0)
+	for key, value in genes.items(): 
 
-						if remove_gene_id is True:
-							arr = gene.split()
+		if x not in genes:
 
-							genes[arr[0]] = row
-						else:
-							genes[gene] = row
+			continue
 
-					for key, value in genes.items(): 
+		result = pearsonr(np.array(value).astype(np.float), np.array(genes[x]).astype(np.float))
 
-						if x not in genes:
+		if key in output:
 
-							continue
+			output[key]["pearsons"].append(result[0])
 
-						result = pearsonr(np.array(value).astype(np.float), np.array(genes[x]).astype(np.float))
+			if "pval" in output[key] and result[1]!=0:
 
-						if key in output:
+				output[key]["pval"].append(result[1])
 
-							output[key]["pearsons"].append(result[0])
+			elif "pval" not in output[key] and result[1]!=0: 
+				output[key]["pval"] = [result[1]]
 
-							if "pval" in output[key] and result[1]!=0:
-
-								output[key]["pval"].append(result[1])
-
-							elif "pval" not in output[key] and result[1]!=0: 
-								output[key]["pval"] = [result[1]]
-
-						else:
-							if result[1]!=0: 
-								output[key] = {"pearsons" : [result[0]], "pval" : [result[1]]}
-							else:
-								output[key] = {"pearsons" : [result[0]]}
-
-		output2 = []
-		for key, value in output.items():
-
-			if "pval" in value:
-
-				if len(value["pval"]) > 1:
-					p_adjust = stats.p_adjust(FloatVector(value["pval"]), method = 'BH')
-					pval = scipy.stats.stats.combine_pvalues(p_adjust)
-				else:
-					pval = [0, value["pval"][0]]
-
-				result = (sum(value["pearsons"])/len(value["pearsons"]), pval[1])
-
-				output2.append(list((key,) + result)) 
+		else:
+			if result[1]!=0: 
+				output[key] = {"pearsons" : [result[0]], "pval" : [result[1]]}
 			else:
-				output2.append(list((key,) + (1,0))) 
+				output[key] = {"pearsons" : [result[0]]}
 
-		# adding citation counts to a volcano plot
-		citation_counts = {}
-		with open("/scratch/timrpeterson/Downloads/gene_gene_paper_count_greater_than_0.csv") as csv_file:
-			csv_reader = csv.reader(csv_file, delimiter=",")
+	output2 = []
+	for key, value in output.items():
 
-			for row in csv_reader:
-				for x in input_genes:
-					if row[0] in x:
-						citation_counts[row[1]] = row[2]
-					elif row[1] in x:
-						citation_counts[row[0]] = row[2]
+		if "pval" in value:
 
-		temp = {}
-		for row in output2:
-			temp[row[0]] = [row[1], row[2]]
-
-		output2_plus_citation_counts = []
-
-		for key, value in temp.items():
-
-			if key in citation_counts:
-				output2_plus_citation_counts.append(list((key,) + (value[0], value[1], int(citation_counts[key])))) 
+			if len(value["pval"]) > 1:
+				p_adjust = stats.p_adjust(FloatVector(value["pval"]), method = 'BH')
+				pval = scipy.stats.stats.combine_pvalues(p_adjust)
 			else:
-				output2_plus_citation_counts.append(list((key,) + (value[0], value[1], 0))) 
-		#sort the output desc
+				pval = [0, value["pval"][0]]
 
-		output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
-		#output3 = sorted(output2, key=lambda x: x[1], reverse=True)
+			result = (sum(value["pearsons"])/len(value["pearsons"]), pval[1])
 
-		path = "/scratch/timrpeterson/MORPHEOME/"
+			output2.append(list((key,) + result)) 
+		else:
+			output2.append(list((key,) + (1,0))) 
 
-		with open(path + 'interaction_correlations_basal/' + input_genes_str + '-' + dataset_type + '-pearsons-python.csv', 'w') as csvfile:
-			spamwriter = csv.writer(csvfile, delimiter=',')
+	temp = {}
+	for row in output2:
+		temp[row[0]] = [row[1], row[2]]
 
-			for row in output3:
-				#if row[2] < .00000001:
-				#if any(field.strip() for field in row):
-				spamwriter.writerow(row)
+	output2_plus_citation_counts = []
 
-			csvfile.close()
+	for key, value in temp.items():
+
+		if key + "__" + x in citation_counts:
+			output2_plus_citation_counts.append(list((key,) + (value[0], value[1], int(citation_counts[key + "__" + x])))) 
+		elif x + "__" + key in citation_counts:
+			output2_plus_citation_counts.append(list((key,) + (value[0], value[1], int(citation_counts[x + "__" + key])))) 
+		else:
+			output2_plus_citation_counts.append(list((key,) + (value[0], value[1], 0))) 
+	#sort the output desc
+
+	output3 = sorted(output2_plus_citation_counts, key=lambda x: x[1], reverse=True)
+	#output3 = sorted(output2, key=lambda x: x[1], reverse=True)
+
+	path = "/scratch/timrpeterson/MORPHEOME/"
+
+	with open(path + 'interaction_correlations_basal/' + x + '-' + dataset_type + '-pearsons-python.csv', 'w') as csvfile:
+		spamwriter = csv.writer(csvfile, delimiter=',')
+
+		for row in output3:
+			#if row[2] < .00000001:
+			#if any(field.strip() for field in row):
+			spamwriter.writerow(row)
+
+		csvfile.close()
 
