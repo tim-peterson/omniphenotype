@@ -1,7 +1,7 @@
 # omniphenotype
 Code for the `Cell fitness is an omniphenotype` paper.
 
-Code to generate data for each figure was written in python, R, PHP, or MySQL. The underlying data can be accessed as described in the methods.
+Code to generate data for each figure was written in python, R, Perl, PHP, or MySQL. The underlying data can be accessed as described in the methods.
 
 ### Figure 2
 
@@ -12,7 +12,7 @@ Code to generate data for each figure was written in python, R, PHP, or MySQL. T
 - Figure 2B statistics (enrichment analysis) was performed using SciPy. The code is available via [here](https://colab.research.google.com/drive/17Ib8tomocbfb6Hz8owC-HQwja3uYOciu?usp=sharing) 
 ### Figure 3
 
-- preceeding this analysis, we dumped all of PubMed into a database table, which we then queried for the co-occurrence of `{gene} AND {condition}`. 
+- For the common disease restricted analysis in Figure S1, preceeding this analysis, we dumped all of PubMed into a MySQL database table, which we then queried for the co-occurrence of `{gene} AND {condition}`. 
 
 ### Figure 4
 
