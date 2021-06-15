@@ -1,104 +1,66 @@
 <?php
+$servername = "localhost";
+$username = "root";
+$password = "";
+$db = "morpheome";
 
-    $client = new \GuzzleHttp\Client;
+try {
+    $conn = new PDO("mysql:host=$servername;dbname=".$db, $username, $password,
+    [PDO::MYSQL_ATTR_LOCAL_INFILE => true]);
+    // set the PDO error mode to exception
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
 
-    $search_term = 'human lymphoblastoid cell lines proliferation';
+    }
+catch(PDOException $e)
+    {
+    echo "Connection failed: " . $e->getMessage();
+    }
+
+$table = 'gene_disease';
+$field = 'disease_type';
+
+$diseases = ['cancer','infection','alzheimer','cardiovascular','diabetes','obesity','depression','inflammation','osteoporosis','hypertension','stroke'];
+
+ini_set('memory_limit','1G');
 
 
-    $response =  $client->request('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi', [
-        'query' => [
-            'db' => 'pubmed',
-            'term' => $search_term,
-            'retmode' => 'json',
-        ]
-    ]);
+$insert_db_table = 'gene_disease_copy';
+ $query = 'SELECT aliases.* FROM aliases left join '.$insert_db_table.' on aliases.gene_id='.$insert_db_table.'.gene_id where type = "NCBI_official_symbol" and '.$insert_db_table.'.gene_id is null';
 
-    $response = json_decode($response->getBody(), true);
+   
+   $sth = $conn->prepare($query);
+    $sth->execute();
+    /* Fetch all of the values in form of a numeric array */
+    $result = $sth->fetchAll();
 
-    $count = $response['esearchresult']['count'];
+$ids = [];
+foreach($diseases as $disease){ 
 
-    $retmax = 200;
+    foreach($result as $row){
 
-    $num_loops = ceil($count/$retmax);
+        $ids[] = $row['name'];
 
-    $retstart = 0;
-  
+        // searches PubMed for co-occurrence of gene name and disease name;
+        $query2 = 'SELECT count(*) as publication_count FROM publications WHERE match(abstract) against("+'.str_replace(["-", "@"], ["", ""],$row['name']).' +'.$disease.'" IN BOOLEAN MODE);';
 
-    $cnt = 0;
-    for($i = 0; $i < $num_loops; $i++){
-
-       $response =  $client->request('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi', [
-            'query' => [
-                'db' => 'pubmed',
-                'term' => $search_term,
-                'retmode' => 'json',
-                'retmax' => $retmax,
-                'retstart' => $retmax*$i
-
-            ]
-        ]);
-
-        $response = json_decode($response->getBody(), true);
-
-        $idlist_arr = $response['esearchresult']['idlist'];
+        $sth2 = $conn->prepare($query2);
+        $sth2->execute();
         
-        $idlist = implode(',', $idlist_arr);
+        /* Fetch all of the values in form of a numeric array */
+        $result2 = $sth2->fetchAll();
 
-        $response =  $client->request('GET', 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi', [
-            'query' => [
-                'db' => 'pubmed',
-                'id' => $idlist,
-                'rettype'=> 'abstract',
-                'retmode' => 'XML',
-            ]
-        ]);
+        $query3 = 'INSERT into '.$insert_db_table.' (gene_id,alias_id,disease_type,publication_count) values ("'.$row['gene_id'].'",'.$row['id'].', "'.$disease.'", "'.$result2[0]['publication_count'].'")';
+      
 
-        $xml = simplexml_load_string($response->getBody());
-        $json = json_encode($xml);
-        $array = json_decode($json,TRUE);
+        $sth3 = $conn->prepare($query3);
+        $sth3->execute();
 
-        if(isset($array['PubmedArticle'])) $articles = $array['PubmedArticle'];
-        else $articles = [$array['MedlineCitation']];
-
-        $output_dir = base_path()."/bio_data/morpheome";
-
-        $cnt0 = 0;
-
-        foreach($articles as $article){
-
-            $abstract_txt = "";
-
-            $pmid = $article['MedlineCitation']['PMID'];
-
-            if(isset($article['MedlineCitation']['Article']['Abstract'])){
-               $abstract = $article['MedlineCitation']['Article']['Abstract']['AbstractText']; 
-            }
-            else{
-                $abstract = '';
-            }
+    }
+}
 
 
-            if(is_array($abstract)){
+$conn = null;
 
-                array_walk_recursive($abstract, function ($item, $key) use(&$abstract_txt){
-
-                    $abstract_txt = $abstract_txt . $item;
-                });
-                
-            }
-            else{              
-                $abstract_txt = $abstract;
-            }
-
-            if ( ($handle1 = fopen($output_dir."/all_patient_abstracts.csv", "a") ) !== FALSE) {
-
-                    fputcsv($handle1, [$pmid, $abstract_txt]);
-
-            }
-            fclose($handle1);
-
-        }
-
-?>
+ ?>
 
 	
