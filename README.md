@@ -3,6 +3,12 @@ Code for the `Cell fitness is an omniphenotype` paper.
 
 Code to generate data for each figure was written in python, R, Perl, PHP, or MySQL. The underlying data can be accessed as described in the methods.
 
+### Figure 1
+- NIH grant data is available to download from the [NIH RePORTER website](https://exporter.nih.gov/ExPORTER_Catalog.aspx)
+- Huttlin (Bioplex) data is available to download from [their website](https://bioplex.hms.harvard.edu/interactions.php)
+- Figure 1.R has code to intersect this data with that of the DepMap
+
+
 ### Figure 3
 
 - figure3A.sql has multiple MySQL commands that are needed to generate the data shown in Figure 3A.
