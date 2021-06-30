@@ -1,12 +1,12 @@
 # omniphenotype
-Code for the `Cell fitness is an omniphenotype` paper.
+Code for the `Cell fitness is an omniphenotype` paper. [Current version, v5, is available on BioRxiv](https://www.biorxiv.org/content/10.1101/487157v5). 
 
 Code to generate data for each figure was written in python, R, Perl, PHP, or MySQL. The underlying data can be accessed as described in the methods.
 
 ### Figure 1
-- NIH grant data is available to download from the [NIH RePORTER website](https://exporter.nih.gov/ExPORTER_Catalog.aspx)
-- Huttlin (Bioplex) data is available to download from [their website](https://bioplex.hms.harvard.edu/interactions.php)
-- Figure 1.R has code to intersect this data with that of the DepMap
+- NIH grant data is available to download from the [NIH RePORTER website](https://exporter.nih.gov/ExPORTER_Catalog.aspx).
+- Huttlin (Bioplex) data is available to download from [their website](https://bioplex.hms.harvard.edu/interactions.php).
+- Figure 1.R has code to intersect this data with that of the DepMap.
 
 
 ### Figure 3
@@ -15,7 +15,7 @@ Code to generate data for each figure was written in python, R, Perl, PHP, or My
 
 - Any gene cluster can be input into the figure3B.py script to yield the data that can be converted into the volcano plot as shown in Figure 3B.
 
-- Figure 3B statistics (enrichment analysis) was performed using SciPy. The code is available via [here](https://colab.research.google.com/drive/17Ib8tomocbfb6Hz8owC-HQwja3uYOciu?usp=sharing) 
+- Figure 3B statistics (enrichment analysis) was performed using SciPy. The code is available via [here](https://colab.research.google.com/drive/17Ib8tomocbfb6Hz8owC-HQwja3uYOciu?usp=sharing).
 ### Figure 4
 
 - For the common disease restricted analysis in Figure S1, preceeding this analysis, we dumped all of PubMed into a MySQL database table, which we then queried for the co-occurrence of `{gene} AND {condition}`. 
